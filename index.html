@@ -30,11 +30,11 @@ body::before{
 .boot-line{opacity:0;white-space:nowrap;display:block;font-size:1.2rem;transition:opacity .6s}
 @media(max-width:600px){.boot-line{font-size:1rem}}
 
-/* PANELS (particles handled by JS if shown) */
+/* PANELS */
 #panel-left,#panel-right{position:absolute;top:0;width:50%;height:100%;background:linear-gradient(120deg,rgba(0,255,255,0.08),rgba(0,255,255,0.22));box-shadow:0 0 20px cyan,0 0 40px cyan inset;display:none;z-index:6000}
 #panel-left{left:0}#panel-right{right:0}
 
-/* SECTIONS (mobile-first) */
+/* SECTIONS */
 :root{--closed-height:180px;--fade-height:60px}
 .section{
   padding:32px;background:rgba(0,20,45,0.6);margin:28px auto;width:94%;border-radius:14px;border:1px solid rgba(0,255,255,.18);box-shadow:0 0 16px rgba(0,255,255,.12);
@@ -46,14 +46,12 @@ body::before{
 .section h2{color:cyan;margin-bottom:10px;font-size:1.5rem;text-shadow:0 0 8px cyan;opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
 .section p{font-size:1.02rem;line-height:1.55rem;opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease;margin:0}
 
-/* bottom fade to hide overflow text cleanly */
 .section::after{
   content:"";position:absolute;left:0;right:0;bottom:0;height:var(--fade-height);pointer-events:none;
   background:linear-gradient(180deg,rgba(0,20,45,0) 0%, rgba(0,20,45,1) 100%);opacity:1;transition:opacity .35s ease;
 }
 .section.expanded::after{opacity:0}
 
-/* visible text when expanded or when section revealed */
 .section.expanded h2,.section.show h2{opacity:1;transform:none}
 .section.expanded p,.section.show p{opacity:1;transform:none}
 
@@ -62,7 +60,7 @@ body::before{
 .expand-btn:hover{transform:scale(1.08);background:rgba(0,10,20,0.22)}
 .section.expanded .expand-btn{transform:rotate(180deg) scale(1.03)}
 
-/* MEDIA QUERIES bigger screens */
+/* MEDIA QUERIES */
 @media(min-width:700px){
   :root{--closed-height:220px;--fade-height:72px}
   body{font-size:18px}
@@ -73,13 +71,11 @@ body::before{
   .logo{font-size:1.7rem}.nav-links a{font-size:1.05rem}
 }
 
-/* Desktop tweaks */
 @media(min-width:1024px){
   .section{width:75%}
   body{font-size:18.5px}
 }
 
-/* particle style small dot */
 .particle{position:absolute;width:4px;height:4px;background:cyan;border-radius:50%;opacity:.8}
 </style>
 </head>
@@ -96,7 +92,7 @@ body::before{
 </div>
 
 <script>
-/* Boot intro (con paneles y partículas) */
+/* Boot intro */
 const lines = document.querySelectorAll('.boot-line');
 function showLine(i){
   if(i >= lines.length){
@@ -107,23 +103,18 @@ function showLine(i){
       for(let p=0;p<40;p++){
         const d=document.createElement('div'); d.className='particle';
         d.style.top = Math.random()*100 + '%'; d.style.left = Math.random()*100 + '%';
-        d.style.setProperty('--dx',(Math.random()*100-50)+'px'); d.style.setProperty('--dy',(Math.random()*100-50)+'px');
-        d.style.animationDuration = (Math.random()*1+1)+'s';
         left.appendChild(d.cloneNode());
         right.appendChild(d);
       }
-      left.classList.add('open-left'); right.classList.add('open-right');
-      setTimeout(()=> document.getElementById('boot-screen').style.opacity = 0, 50);
+      document.getElementById('boot-screen').style.opacity = 0;
       setTimeout(()=> {
         document.getElementById('boot-screen').style.display = 'none';
         const mainContent = document.getElementById('main-content');
         mainContent.style.display = 'block';
-        // reveal sections with stagger
         const sections = mainContent.querySelectorAll('.section');
         sections.forEach((sec, idx)=>{
           setTimeout(()=> {
             sec.classList.add('show');
-            // stagger text reveal inside each section
             const tit = sec.querySelector('h2'), p = sec.querySelector('p');
             setTimeout(()=> tit.classList.add('show-text'), 120);
             setTimeout(()=> p.classList.add('show-text'), 420);
@@ -146,6 +137,7 @@ showLine(0);
     <a href="#inicio">Inicio</a>
     <a href="#funcion">Funcionamiento</a>
     <a href="#objetivo">Objetivo</a>
+    <a href="#agradecimientos">Agradecimientos</a>
   </div>
 </div>
 
@@ -155,41 +147,76 @@ showLine(0);
   <section id="inicio" class="section" aria-expanded="false">
     <h2>Proyecto de Casa Automatizada</h2>
     <p>
-      Este proyecto tiene como objetivo desarrollar una maqueta de casa inteligente que integra sistemas de iluminación, sensores de presencia, y automatización de electrodomésticos, permitiendo una simulación realista de un hogar "futurista". La maqueta busca demostrar cómo la tecnología puede mejorar la eficiencia energética, la seguridad y la comodidad del usuario, mostrando además la interacción entre sensores, microcontroladores y actuadores en un entorno controlado. Se pretende que los visitantes comprendan la lógica de funcionamiento y los beneficios prácticos de la domótica moderna.
+      Este proyecto tiene como objetivo desarrollar una maqueta de casa inteligente que integra sistemas de iluminación, sensores de presencia, y automatización de electrodomésticos, permitiendo una simulación realista de un hogar futurista...
     </p>
-    <div class="expand-btn" role="button" aria-label="Expandir sección">⌵</div>
+    <div class="expand-btn">⌵</div>
   </section>
 
   <section id="funcion" class="section" aria-expanded="false">
     <h2>Funcionamiento del Sistema</h2>
     <p>
-      El sistema funciona mediante un microcontrolador que recibe señales de distintos sensores distribuidos por la maqueta, como detectores de movimiento, sensores de luz y pulsadores. Según estas señales, el sistema activa los actuadores correspondientes, como LEDs, motores o alarmas. Por ejemplo, al detectar movimiento en un pasillo, se encienden las luces automáticamente; al pulsar un botón de un cuarto, se controla la iluminación o la apertura de una puerta simulada. Todo el flujo se puede observar en tiempo real, mostrando la coordinación de los dispositivos y la lógica de programación detrás de cada acción, lo que permite entender el concepto de automatización de procesos.
+      El sistema funciona mediante un microcontrolador que recibe señales de sensores distribuidos por la maqueta, activando actuadores como luces, motores y alarmas...
     </p>
-    <div class="expand-btn" role="button" aria-label="Expandir sección">⌵</div>
+    <div class="expand-btn">⌵</div>
   </section>
 
   <section id="objetivo" class="section" aria-expanded="false">
     <h2>Objetivo del Proyecto</h2>
     <p>
-      El objetivo principal de esta maqueta es educar y demostrar el potencial de los sistemas domóticos en un hogar del futuro. Se busca que los estudiantes y visitantes comprendan cómo la tecnología puede optimizar recursos, incrementar la seguridad y mejorar la calidad de vida. Además, el proyecto pretende ofrecer un ejemplo práctico de integración de hardware y software, enseñando la importancia de la programación, el diseño de circuitos y la planificación de sistemas automatizados. Esta experiencia permite visualizar de manera tangible cómo los conceptos teóricos se aplican en un entorno controlado y funcional.
+      El objetivo principal es educar y demostrar el potencial de los sistemas domóticos, mostrando cómo la tecnología puede optimizar recursos, brindar seguridad y mejorar la calidad de vida...
     </p>
-    <div class="expand-btn" role="button" aria-label="Expandir sección">⌵</div>
+    <div class="expand-btn">⌵</div>
+  </section>
+
+  <!-- 🔵 NUEVA SECCIÓN: AGRADECIMIENTOS -->
+  <section id="agradecimientos" class="section" aria-expanded="false">
+    <h2>Agradecimientos</h2>
+    <p>
+      Queremos expresar nuestro agradecimiento a todas las personas que hicieron posible este proyecto.  
+      A nuestros profesores, compañeros y familias por el apoyo constante y la dedicación compartida.
+
+      <br><br>
+
+      <div style="display:flex; gap:20px; flex-wrap:wrap; margin-top:15px;">
+
+        <div style="text-align:center;">
+          <img src="imagenes/persona1.jpg" 
+               alt="Persona 1" 
+               style="width:120px; height:120px; object-fit:cover; border-radius:12px; border:2px solid cyan;">
+          <p style="margin-top:8px; font-size:0.9rem;">Persona 1</p>
+        </div>
+
+        <div style="text-align:center;">
+          <img src="imagenes/persona2.jpg" 
+               alt="Persona 2" 
+               style="width:120px; height:120px; object-fit:cover; border-radius:12px; border:2px solid cyan;">
+          <p style="margin-top:8px; font-size:0.9rem;">Persona 2</p>
+        </div>
+
+        <div style="text-align:center;">
+          <img src="imagenes/persona3.jpg" 
+               alt="Persona 3" 
+               style="width:120px; height:120px; object-fit:cover; border-radius:12px; border:2px solid cyan;">
+          <p style="margin-top:8px; font-size:0.9rem;">Persona 3</p>
+        </div>
+
+      </div>
+    </p>
+    <div class="expand-btn">⌵</div>
   </section>
 
 </section>
 
 <script>
-/* Expand / collapse with improved animations + staggered reveal */
+/* Expand - Collapse */
 const CLOSED_HEIGHT = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--closed-height')) || 180;
-const TRANS_MS = 420; // must be similar to CSS transition time
+const TRANS_MS = 420;
 
-// set initial heights (if main-content visible later)
 function initHeights(){
   document.querySelectorAll('.section').forEach(sec=>{
     if(!sec.classList.contains('expanded')){
       sec.style.height = CLOSED_HEIGHT + 'px';
       sec.setAttribute('aria-expanded','false');
-      // ensure text hidden initial
       const h = sec.querySelector('h2'), p = sec.querySelector('p');
       h.classList.remove('show-text'); p.classList.remove('show-text');
     }
@@ -197,58 +224,30 @@ function initHeights(){
 }
 document.addEventListener('DOMContentLoaded', initHeights);
 
-// attach handlers (works even if sections created before)
 document.addEventListener('click', (e)=>{
   if(e.target.closest('.expand-btn')){
-    const btn = e.target.closest('.expand-btn');
-    const sec = btn.parentElement;
-    toggleSection(sec, btn);
+    toggleSection(e.target.closest('.expand-btn').parentElement);
   }
 });
 
-function toggleSection(sec, btn){
+function toggleSection(sec){
   const fullH = sec.scrollHeight;
   const hEl = sec.querySelector('h2'), pEl = sec.querySelector('p');
 
   if(!sec.classList.contains('expanded')){
-    // expand
     sec.classList.add('expanded');
-    sec.setAttribute('aria-expanded','true');
-
-    // animate to full height
     sec.style.height = fullH + 'px';
-
-    // staggered text reveal inside
-    setTimeout(()=> { hEl.classList.add('show-text'); }, 120);
-    setTimeout(()=> { pEl.classList.add('show-text'); }, 420);
-
-    // set to auto after transition so it adapts to content changes
-    setTimeout(()=>{
-      if(sec.classList.contains('expanded')) sec.style.height = 'auto';
-    }, TRANS_MS + 50);
-
-    // scroll into view a bit after opening starts
+    setTimeout(()=> hEl.classList.add('show-text'), 120);
+    setTimeout(()=> pEl.classList.add('show-text'), 420);
+    setTimeout(()=> sec.style.height = 'auto', TRANS_MS + 50);
     setTimeout(()=> sec.scrollIntoView({behavior:'smooth', block:'start'}), 200);
-
   } else {
-    // collapse: if currently auto, fix to pixel height first
-    if(getComputedStyle(sec).height === 'auto' || sec.style.height === 'auto'){
-      sec.style.height = sec.scrollHeight + 'px';
-    }
-    // force reflow
+    sec.style.height = sec.scrollHeight + 'px';
     sec.offsetHeight;
-    // hide texts smoothly (reverse stagger)
     pEl.classList.remove('show-text');
     setTimeout(()=> hEl.classList.remove('show-text'), 80);
-
-    // animate to closed height
     requestAnimationFrame(()=> sec.style.height = CLOSED_HEIGHT + 'px');
-
-    // remove expanded after transition
-    setTimeout(()=>{
-      sec.classList.remove('expanded');
-      sec.setAttribute('aria-expanded','false');
-    }, TRANS_MS + 40);
+    setTimeout(()=> sec.classList.remove('expanded'), TRANS_MS + 40);
   }
 }
 </script>
