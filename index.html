@@ -1,306 +1,255 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Maqueta Automatizada Futurista</title>
 
 <style>
-/* ===========================
-   GLOBAL – MOBILE FIRST
-   =========================== */
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; }
+/* ========== GLOBAL ========== */
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+html{scroll-behavior:smooth}
+body{color:#e8f0ff;overflow-x:hidden;background:#051018}
 
-html { scroll-behavior:smooth; }
-
-body {
-    color: #e8f0ff;
-    overflow-x: hidden;
-    font-size: 16px;
+/* background image */
+body::before{
+  content:"";
+  position:fixed;top:0;left:0;width:100vw;height:100vh;
+  background:linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.6)), url('https://websiteoss.ecoflow.com/upload/image/1722582167669/20240802-144827-tuya.jpg') center/cover no-repeat;
+  z-index:-2;opacity:1;
 }
 
-/* ===========================
-   FONDO
-   =========================== */
-body::before {
-    content:"";
-    position:fixed; top:0; left:0;
-    width:100vw; height:100vh;
-    background: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.6)),
-                url('https://websiteoss.ecoflow.com/upload/image/1722582167669/20240802-144827-tuya.jpg') no-repeat center/cover;
-    background-size: cover;
-    opacity:1;
-    z-index:-2;
+/* NAVBAR */
+.navbar{width:100%;padding:15px 20px;background:rgba(0,15,35,0.8);backdrop-filter:blur(10px);border-bottom:1px solid rgba(0,255,255,.4);display:flex;justify-content:space-between;align-items:center;text-transform:uppercase;font-weight:700;letter-spacing:1px;z-index:100;position:relative}
+.logo{color:cyan;font-size:1.3rem}
+.nav-links a{margin-left:12px;color:#b8dfff;text-decoration:none;transition:.18s;font-size:1rem}
+.nav-links a:hover{color:cyan}
+
+/* BOOT SCREEN */
+#boot-screen{position:fixed;inset:0;background:black;color:cyan;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;font-family:monospace;text-shadow:0 0 12px cyan;z-index:5000;pointer-events:none;transition:opacity .8s}
+.boot-line{opacity:0;white-space:nowrap;display:block;font-size:1.2rem;transition:opacity .6s}
+@media(max-width:600px){.boot-line{font-size:1rem}}
+
+/* PANELS (particles handled by JS if shown) */
+#panel-left,#panel-right{position:absolute;top:0;width:50%;height:100%;background:linear-gradient(120deg,rgba(0,255,255,0.08),rgba(0,255,255,0.22));box-shadow:0 0 20px cyan,0 0 40px cyan inset;display:none;z-index:6000}
+#panel-left{left:0}#panel-right{right:0}
+
+/* SECTIONS (mobile-first) */
+:root{--closed-height:180px;--fade-height:60px}
+.section{
+  padding:32px;background:rgba(0,20,45,0.6);margin:28px auto;width:94%;border-radius:14px;border:1px solid rgba(0,255,255,.18);box-shadow:0 0 16px rgba(0,255,255,.12);
+  opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease,height .45s ease-in-out;
+  height:var(--closed-height);overflow:hidden;position:relative;
+}
+.section.show{opacity:1;transform:none}
+
+.section h2{color:cyan;margin-bottom:10px;font-size:1.5rem;text-shadow:0 0 8px cyan;opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
+.section p{font-size:1.02rem;line-height:1.55rem;opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease;margin:0}
+
+/* bottom fade to hide overflow text cleanly */
+.section::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:var(--fade-height);pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,20,45,0) 0%, rgba(0,20,45,1) 100%);opacity:1;transition:opacity .35s ease;
+}
+.section.expanded::after{opacity:0}
+
+/* visible text when expanded or when section revealed */
+.section.expanded h2,.section.show h2{opacity:1;transform:none}
+.section.expanded p,.section.show p{opacity:1;transform:none}
+
+/* EXPAND BUTTON */
+.expand-btn{position:absolute;bottom:12px;right:14px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;color:cyan;background:rgba(0,10,20,0.14);border-radius:8px;cursor:pointer;transition:transform .35s ease,background .18s ease}
+.expand-btn:hover{transform:scale(1.08);background:rgba(0,10,20,0.22)}
+.section.expanded .expand-btn{transform:rotate(180deg) scale(1.03)}
+
+/* MEDIA QUERIES bigger screens */
+@media(min-width:700px){
+  :root{--closed-height:220px;--fade-height:72px}
+  body{font-size:18px}
+  .section{width:86%;padding:44px}
+  .section h2{font-size:2.2rem}
+  .section p{font-size:1.35rem;line-height:1.95rem}
+  .expand-btn{width:46px;height:46px;font-size:1.45rem}
+  .logo{font-size:1.7rem}.nav-links a{font-size:1.05rem}
 }
 
-/* ===========================
-   NAVBAR
-   =========================== */
-.navbar {
-    width:100%; padding:15px 20px;
-    background: rgba(0,15,35,0.8);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0,255,255,.4);
-    display:flex; justify-content:space-between; align-items:center;
-    text-transform: uppercase; font-weight:bold; letter-spacing:1px;
-    z-index:100; position:relative;
+/* Desktop tweaks */
+@media(min-width:1024px){
+  .section{width:75%}
+  body{font-size:18.5px}
 }
 
-.logo { color: cyan; font-size: 1.3rem; }
-.nav-links a {
-    margin-left:12px;
-    color:#b8dfff; text-decoration:none;
-    transition:.2s; font-size:1rem;
-}
-.nav-links a:hover { color: cyan; }
-
-/* ===========================
-   MOBILE NAVBAR
-   =========================== */
-@media (max-width:600px){
-    .nav-links a {
-        font-size:0.9rem;
-        margin-left:10px;
-    }
-}
-
-/* ===========================
-   BOOT SCREEN
-   =========================== */
-#boot-screen {
-    position: fixed;
-    top:0; left:0; width:100%; height:100%;
-    background:black; color: cyan;
-    display:flex; flex-direction:column; justify-content:center; align-items:center;
-    text-align:center; font-family: monospace;
-    text-shadow: 0 0 12px cyan;
-    z-index:5000;
-    overflow:hidden;
-    pointer-events:none;
-    transition: opacity 1s ease-out;
-}
-
-.boot-line {
-    opacity: 0;
-    white-space: nowrap;
-    width: 0;
-    display:block;
-    text-align:center;
-    font-size: 1.2rem;
-    transition: opacity 0.8s ease-out;
-}
-
-@media (max-width:600px){
-    .boot-line { font-size:1rem; }
-}
-
-/* ===========================
-   SECCIONES
-   =========================== */
-:root {
-    --closed-height: 180px;
-    --fade-height: 60px;
-}
-
-.section {
-    padding: 35px;
-    background: rgba(0,20,45,0.6);
-    margin: 30px auto;
-    width: 95%;
-    border-radius:15px;
-    border:1px solid rgba(0,255,255,.2);
-    box-shadow:0 0 20px rgba(0,255,255,.15);
-
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity .8s ease-out, transform .8s ease-out;
-
-    height: var(--closed-height);
-    overflow: hidden;
-    position: relative;
-}
-
-.section h2 { 
-    color:cyan; margin-bottom:10px; 
-    font-size:1.5rem; text-shadow:0 0 8px cyan;
-}
-.section p {
-    font-size:1.05rem;
-    line-height:1.55rem;
-}
-
-/* ===========================
-   OCULTAR TEXTO (SOLUCIÓN REAL)
-   =========================== */
-.section::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: var(--fade-height);
-    pointer-events: none;
-
-    background: linear-gradient(
-        to bottom,
-        rgba(0,20,45,0) 0%,
-        rgba(0,20,45,1) 100%
-    );
-
-    opacity: 1;
-    transition: opacity .3s ease-out;
-}
-
-.section.expanded::after {
-    opacity: 0;
-}
-
-/* BOTÓN */
-.expand-btn {
-    position:absolute;
-    bottom:12px; right:15px;
-    width:38px; height:38px;
-    font-size:1.2rem;
-    cursor:pointer;
-}
-
-/* ===========================
-   RESPONSIVE
-   =========================== */
-@media (min-width:700px){
-    body { font-size:18px; }
-
-    :root {
-        --closed-height: 220px;
-        --fade-height: 70px;
-    }
-
-    .section { width:85%; padding:50px; }
-    .section h2 { font-size:2.2rem; }
-    .section p { font-size:1.4rem; line-height:2rem; }
-
-    .expand-btn {
-        width:45px; height:45px; font-size:1.5rem;
-    }
-
-    .logo { font-size:1.7rem; }
-    .nav-links a { font-size:1.1rem; }
-}
+/* particle style small dot */
+.particle{position:absolute;width:4px;height:4px;background:cyan;border-radius:50%;opacity:.8}
 </style>
 </head>
 <body>
 
-<!-- ===========================
-     BOOT SCREEN
-=========================== -->
-<div id="boot-screen">
-    <p class="boot-line">Inicializando sistema domótico...</p>
-    <p class="boot-line">Cargando módulos de control...</p>
-    <p class="boot-line">Sincronizando sensores...</p>
-    <p class="boot-line">✓ Sistema listo</p>
+<!-- BOOT SCREEN -->
+<div id="boot-screen" aria-hidden="false">
+  <p class="boot-line">Inicializando sistema domótico...</p>
+  <p class="boot-line">Cargando módulos de control...</p>
+  <p class="boot-line">Sincronizando sensores...</p>
+  <p class="boot-line">✓ Sistema listo</p>
+  <div id="panel-left"></div>
+  <div id="panel-right"></div>
 </div>
 
 <script>
-/* Animación de boot */
+/* Boot intro (con paneles y partículas) */
 const lines = document.querySelectorAll('.boot-line');
 function showLine(i){
-    if(i >= lines.length){
-        lines.forEach(line => line.style.opacity = 0);
-        setTimeout(()=>{
-            document.getElementById('boot-screen').style.opacity = 0;
-            setTimeout(()=>{
-                document.getElementById('boot-screen').style.display = 'none';
-                const mainContent = document.getElementById('main-content');
-                mainContent.style.display = 'block';
-
-                const sections = mainContent.querySelectorAll('.section');
-                sections.forEach((sec, idx)=>{
-                    setTimeout(()=> sec.style.opacity = 1, idx*600);
-                    setTimeout(()=> sec.style.transform = 'translateY(0)', idx*600);
-                });
-            }, 1200);
-        }, 800);
-        return;
-    }
-
-    const line = lines[i];
-    line.style.opacity = 1;
-    line.style.width = '100%';
-    setTimeout(()=> showLine(i+1), 1200);
+  if(i >= lines.length){
+    lines.forEach(l => l.style.opacity = 0);
+    setTimeout(()=> {
+      const left = document.getElementById('panel-left'), right = document.getElementById('panel-right');
+      left.style.display = right.style.display = 'block';
+      for(let p=0;p<40;p++){
+        const d=document.createElement('div'); d.className='particle';
+        d.style.top = Math.random()*100 + '%'; d.style.left = Math.random()*100 + '%';
+        d.style.setProperty('--dx',(Math.random()*100-50)+'px'); d.style.setProperty('--dy',(Math.random()*100-50)+'px');
+        d.style.animationDuration = (Math.random()*1+1)+'s';
+        left.appendChild(d.cloneNode());
+        right.appendChild(d);
+      }
+      left.classList.add('open-left'); right.classList.add('open-right');
+      setTimeout(()=> document.getElementById('boot-screen').style.opacity = 0, 50);
+      setTimeout(()=> {
+        document.getElementById('boot-screen').style.display = 'none';
+        const mainContent = document.getElementById('main-content');
+        mainContent.style.display = 'block';
+        // reveal sections with stagger
+        const sections = mainContent.querySelectorAll('.section');
+        sections.forEach((sec, idx)=>{
+          setTimeout(()=> {
+            sec.classList.add('show');
+            // stagger text reveal inside each section
+            const tit = sec.querySelector('h2'), p = sec.querySelector('p');
+            setTimeout(()=> tit.classList.add('show-text'), 120);
+            setTimeout(()=> p.classList.add('show-text'), 420);
+          }, idx*500);
+        });
+      }, 1500);
+    }, 800);
+    return;
+  }
+  lines[i].style.opacity = 1;
+  setTimeout(()=> showLine(i+1), 1100);
 }
 showLine(0);
 </script>
 
-<!-- ===========================
-     NAVBAR
-=========================== -->
+<!-- NAVBAR -->
 <div class="navbar">
-    <div class="logo">MAQUETA DOMÓTICA</div>
-    <div class="nav-links">
-        <a href="#inicio">Inicio</a>
-        <a href="#funcion">Funcionamiento</a>
-        <a href="#objetivo">Objetivo</a>
-    </div>
+  <div class="logo">MAQUETA DOMÓTICA</div>
+  <div class="nav-links">
+    <a href="#inicio">Inicio</a>
+    <a href="#funcion">Funcionamiento</a>
+    <a href="#objetivo">Objetivo</a>
+  </div>
 </div>
 
-<!-- ===========================
-     CONTENIDO
-=========================== -->
+<!-- MAIN CONTENT -->
 <section id="main-content" style="display:none;">
-    
-    <section id="inicio" class="section">
-        <h2>Proyecto de Casa Automatizada</h2>
-        <p>
-          Este proyecto tiene como objetivo desarrollar una maqueta de casa inteligente que integra sistemas de iluminación, sensores de presencia y automatización de electrodomésticos, permitiendo una simulación realista de un hogar futurista…
-        </p>
-        <div class="expand-btn">⌵</div>
-    </section>
 
-    <section id="funcion" class="section">
-        <h2>Funcionamiento del Sistema</h2>
-        <p>
-          El sistema funciona mediante un microcontrolador que recibe señales de distintos sensores…
-        </p>
-        <div class="expand-btn">⌵</div>
-    </section>
+  <section id="inicio" class="section" aria-expanded="false">
+    <h2>Proyecto de Casa Automatizada</h2>
+    <p>
+      Este proyecto tiene como objetivo desarrollar una maqueta de casa inteligente que integra sistemas de iluminación, sensores de presencia, y automatización de electrodomésticos, permitiendo una simulación realista de un hogar "futurista". La maqueta busca demostrar cómo la tecnología puede mejorar la eficiencia energética, la seguridad y la comodidad del usuario, mostrando además la interacción entre sensores, microcontroladores y actuadores en un entorno controlado. Se pretende que los visitantes comprendan la lógica de funcionamiento y los beneficios prácticos de la domótica moderna.
+    </p>
+    <div class="expand-btn" role="button" aria-label="Expandir sección">⌵</div>
+  </section>
 
-    <section id="objetivo" class="section">
-        <h2>Objetivo del Proyecto</h2>
-        <p>
-          El objetivo principal de esta maqueta es educar y demostrar el potencial de los sistemas domóticos…
-        </p>
-        <div class="expand-btn">⌵</div>
-    </section>
+  <section id="funcion" class="section" aria-expanded="false">
+    <h2>Funcionamiento del Sistema</h2>
+    <p>
+      El sistema funciona mediante un microcontrolador que recibe señales de distintos sensores distribuidos por la maqueta, como detectores de movimiento, sensores de luz y pulsadores. Según estas señales, el sistema activa los actuadores correspondientes, como LEDs, motores o alarmas. Por ejemplo, al detectar movimiento en un pasillo, se encienden las luces automáticamente; al pulsar un botón de un cuarto, se controla la iluminación o la apertura de una puerta simulada. Todo el flujo se puede observar en tiempo real, mostrando la coordinación de los dispositivos y la lógica de programación detrás de cada acción, lo que permite entender el concepto de automatización de procesos.
+    </p>
+    <div class="expand-btn" role="button" aria-label="Expandir sección">⌵</div>
+  </section>
+
+  <section id="objetivo" class="section" aria-expanded="false">
+    <h2>Objetivo del Proyecto</h2>
+    <p>
+      El objetivo principal de esta maqueta es educar y demostrar el potencial de los sistemas domóticos en un hogar del futuro. Se busca que los estudiantes y visitantes comprendan cómo la tecnología puede optimizar recursos, incrementar la seguridad y mejorar la calidad de vida. Además, el proyecto pretende ofrecer un ejemplo práctico de integración de hardware y software, enseñando la importancia de la programación, el diseño de circuitos y la planificación de sistemas automatizados. Esta experiencia permite visualizar de manera tangible cómo los conceptos teóricos se aplican en un entorno controlado y funcional.
+    </p>
+    <div class="expand-btn" role="button" aria-label="Expandir sección">⌵</div>
+  </section>
 
 </section>
 
 <script>
-/* Expandir & Contraer */
+/* Expand / collapse with improved animations + staggered reveal */
 const CLOSED_HEIGHT = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--closed-height')) || 180;
+const TRANS_MS = 420; // must be similar to CSS transition time
 
-document.querySelectorAll('.expand-btn').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-        const section = btn.parentElement;
-        toggleSection(section);
-    });
+// set initial heights (if main-content visible later)
+function initHeights(){
+  document.querySelectorAll('.section').forEach(sec=>{
+    if(!sec.classList.contains('expanded')){
+      sec.style.height = CLOSED_HEIGHT + 'px';
+      sec.setAttribute('aria-expanded','false');
+      // ensure text hidden initial
+      const h = sec.querySelector('h2'), p = sec.querySelector('p');
+      h.classList.remove('show-text'); p.classList.remove('show-text');
+    }
+  });
+}
+document.addEventListener('DOMContentLoaded', initHeights);
+
+// attach handlers (works even if sections created before)
+document.addEventListener('click', (e)=>{
+  if(e.target.closest('.expand-btn')){
+    const btn = e.target.closest('.expand-btn');
+    const sec = btn.parentElement;
+    toggleSection(sec, btn);
+  }
 });
 
-function toggleSection(section){
-    const fullH = section.scrollHeight;
+function toggleSection(sec, btn){
+  const fullH = sec.scrollHeight;
+  const hEl = sec.querySelector('h2'), pEl = sec.querySelector('p');
 
-    if(!section.classList.contains('expanded')){
-        section.classList.add('expanded');
-        section.style.height = fullH + 'px';
-        setTimeout(()=> section.style.height = 'auto', 350);
-        section.scrollIntoView({ behavior:'smooth' });
-    } 
-    else {
-        section.style.height = section.scrollHeight + 'px';
-        requestAnimationFrame(()=>{
-            section.style.height = CLOSED_HEIGHT + 'px';
-        });
-        setTimeout(()=> section.classList.remove('expanded'), 350);
+  if(!sec.classList.contains('expanded')){
+    // expand
+    sec.classList.add('expanded');
+    sec.setAttribute('aria-expanded','true');
+
+    // animate to full height
+    sec.style.height = fullH + 'px';
+
+    // staggered text reveal inside
+    setTimeout(()=> { hEl.classList.add('show-text'); }, 120);
+    setTimeout(()=> { pEl.classList.add('show-text'); }, 420);
+
+    // set to auto after transition so it adapts to content changes
+    setTimeout(()=>{
+      if(sec.classList.contains('expanded')) sec.style.height = 'auto';
+    }, TRANS_MS + 50);
+
+    // scroll into view a bit after opening starts
+    setTimeout(()=> sec.scrollIntoView({behavior:'smooth', block:'start'}), 200);
+
+  } else {
+    // collapse: if currently auto, fix to pixel height first
+    if(getComputedStyle(sec).height === 'auto' || sec.style.height === 'auto'){
+      sec.style.height = sec.scrollHeight + 'px';
     }
+    // force reflow
+    sec.offsetHeight;
+    // hide texts smoothly (reverse stagger)
+    pEl.classList.remove('show-text');
+    setTimeout(()=> hEl.classList.remove('show-text'), 80);
+
+    // animate to closed height
+    requestAnimationFrame(()=> sec.style.height = CLOSED_HEIGHT + 'px');
+
+    // remove expanded after transition
+    setTimeout(()=>{
+      sec.classList.remove('expanded');
+      sec.setAttribute('aria-expanded','false');
+    }, TRANS_MS + 40);
+  }
 }
 </script>
 
